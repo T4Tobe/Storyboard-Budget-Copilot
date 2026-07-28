@@ -12,7 +12,7 @@ An AI assistant that helps small creators turn a rough idea into a structured st
 
 Small creators and solo content producers often struggle to turn vague ideas into actionable production plans with realistic budgets and timelines. They juggle creative brainstorming, script writing, asset planning, and cost estimation in scattered documents and spreadsheets, with little automation or guidance. This leads to missed deadlines, overspending, under‑utilized assets, and stalled projects.
 
-AI STORYBOARD & BUDGET COPILOT addresses this by transforming a rough idea into a structured storyboard, production checklist, and budget estimate. The copilot guides creators from concept to execution with AI‑generated scenes, tasks, resources, and cost insights.
+STORYBOARD & BUDGET COPILOT addresses this by transforming a rough idea into a structured storyboard, production checklist, and budget estimate. The copilot guides creators from concept to execution with AI‑generated scenes, tasks, resources, and cost insights.
 
 ## 3. User persona
 
