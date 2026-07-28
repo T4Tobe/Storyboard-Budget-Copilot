@@ -71,7 +71,7 @@ Planned stretch features:
 - IBM Granite (`ibm/granite-3-8b-instruct`) via watsonx.ai API.
 - Prompt templates using Granite chat format to produce structured JSON outputs.
 
-See [`docs/mvp-spec.md`](docs/mvp-spec.md) for a detailed specification.
+See [`docs/mvp-spec.md`](mvp-spec.md) for a detailed specification.
 
 ## 7. AI approach
 
