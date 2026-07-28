@@ -1,4 +1,4 @@
-# AI STORYBOARD & BUDGET COPILOT
+# STORYBOARD & BUDGET COPILOT
 
 An AI assistant that helps small creators turn a rough idea into a structured storyboard, production checklist, and budget estimate, so they can move from concept to production with confidence.
 
@@ -57,18 +57,19 @@ Planned stretch features:
 ## 6. Architecture and tech stack
 
 **Frontend:**
-- React or Next.js  
-- Core components: `IdeaInput`, `StoryboardView`, `ChecklistView`, `BudgetView`.
+- React + Vite (TypeScript)
+- Core components: `StoryboardView`, `ChecklistView`, `BudgetView` in `Frontend/PlanPage.tsx`.
 
 **Backend:**
-- Node.js + Express (or FastAPI) REST API:
-  - `POST /api/storyboard` – generate storyboard from idea.  
-  - `POST /api/checklist` – derive checklist from storyboard.  
+- Python + FastAPI REST API:
+  - `POST /api/storyboard` – generate storyboard from idea.
+  - `POST /api/checklist` – derive checklist from storyboard.
   - `POST /api/budget` – estimate budget based on idea and parameters.
+  - `POST /api/refine` – refine any output with a follow-up instruction.
 
 **AI layer:**
-- LLM (e.g., IBM Granite or compatible hosted model) called via API.  
-- Prompt templates designed to produce structured JSON for storyboard, checklist, and budget.  
+- IBM Granite (`ibm/granite-3-8b-instruct`) via watsonx.ai API.
+- Prompt templates using Granite chat format to produce structured JSON outputs.
 
 See [`docs/mvp-spec.md`](docs/mvp-spec.md) for a detailed specification.
 
@@ -91,9 +92,8 @@ IBM Bob is used to:
 This project uses IBM Bob in Visual Studio Code as an AI SDLC partner:
 
 - **Plan mode:** To create an implementation plan from the MVP spec (features, endpoints, components).  
-- **Code mode:** To generate boilerplate code for API routes, data models, and basic error handling.  
+- **Agent mode:** To generate boilerplate code for API routes, data models, and basic error handling.  Also, to refactor code, suggest tests, and improve prompts.
 - **Ask mode:** To clarify integration details (e.g., connecting to the chosen LLM API, handling JSON responses).  
-- **Advanced mode (optional):** To refactor code, suggest tests, and improve prompts.
 
 The README and documentation reflect how IBM Bob contributed to planning, coding, and optimization for the prototype.
 
@@ -113,7 +113,7 @@ The README and documentation reflect how IBM Bob contributed to planning, coding
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/smart-story.git
+git clone https://github.com/T4Tobe/smart-story.git
 cd smart-story
 ```
 
