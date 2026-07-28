@@ -99,38 +99,112 @@ The README and documentation reflect how IBM Bob contributed to planning, coding
 
 ## 9. Getting started
 
-> Note: This section will be completed once the core prototype is implemented.
+### Prerequisites
 
-**Prerequisites:**
-- Node.js (or Python, if using FastAPI).  
-- npm/yarn (or pip) installed locally.  
-- IBM Bob installed in VS Code.
+| Tool | Version | Notes |
+|---|---|---|
+| Python | 3.9+ | [python.org](https://www.python.org/downloads/) |
+| Node.js | 18+ | [nodejs.org](https://nodejs.org/) |
+| IBM Cloud account | — | [cloud.ibm.com](https://cloud.ibm.com) |
+| watsonx.ai project | — | [dataplatform.cloud.ibm.com](https://dataplatform.cloud.ibm.com) |
 
-**Setup:**
+---
+
+### 1. Clone the repository
+
 ```bash
-# Clone the repository
-git clone https://github.com/<your-username>/ai-storyboard-budget-copilot.git
-cd ai-storyboard-budget-copilot
+git clone https://github.com/<your-username>/smart-story.git
+cd smart-story
+```
+
+---
+
+### 2. Configure environment variables
+
+Copy the example file and fill in your real credentials:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set:
+
+```
+WATSONX_API_KEY=your-ibm-cloud-api-key
+WATSONX_PROJECT_ID=your-watsonx-project-id
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+```
+
+- **API key** → [cloud.ibm.com/iam/apikeys](https://cloud.ibm.com/iam/apikeys) → Create
+- **Project ID** → [dataplatform.cloud.ibm.com](https://dataplatform.cloud.ibm.com) → your project → Manage → General
+
+---
+
+### 3. Set up the Python backend
+
+```bash
+# Create and activate virtual environment
+python -m venv venv
+
+# Windows
+.\venv\Scripts\Activate.ps1
+# macOS / Linux
+source venv/bin/activate
 
 # Install dependencies
-npm install
-# or
 pip install -r requirements.txt
 ```
 
-**Run:**
+---
+
+### 4. Set up the frontend
+
 ```bash
-# Start backend
-npm run dev
-# Start frontend (if separate)
-npm run start
+npm install
 ```
 
-Then open `http://localhost:3000` in your browser.
+---
+
+### 5. Run the app
+
+Open **two terminals** in the project root:
+
+**Terminal 1 — Backend**
+```bash
+uvicorn Backend.main:app --reload
+```
+Runs at `http://localhost:8000`
+
+**Terminal 2 — Frontend**
+```bash
+npm run dev
+```
+Runs at `http://localhost:3000`
+
+Then open **http://localhost:3000** in your browser.
+
+---
+
+### API reference
+
+The backend exposes four endpoints (full interactive docs at `http://localhost:8000/docs`):
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/storyboard` | Generate a scene-based storyboard |
+| POST | `/api/checklist` | Generate a production checklist from a storyboard |
+| POST | `/api/budget` | Generate a budget estimate |
+| POST | `/api/refine` | Refine any generated output with a follow-up instruction |
+
+---
 
 ## 10. Roadmap
 
-- Implement core user flows and AI calls.  
-- Add save/export features.  
-- Polish UI and record a demo video for the AI Builders Challenge submission.  
-- Explore integration with financial tools (Excel/Power BI) for advanced budgeting.
+- [x] Core storyboard, checklist, and budget generation
+- [x] Refinement prompts
+- [x] Export / copy to clipboard
+- [x] Mobile-responsive UI
+- [ ] Save and load multiple projects
+- [ ] Export budget to CSV/Excel
+- [ ] Content-type templates (tutorial, vlog, interview, narrative)
+- [ ] Demo video for AI Builders Challenge submission
