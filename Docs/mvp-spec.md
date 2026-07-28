@@ -1,6 +1,6 @@
-MVP Specification – AI STORYBOARD & BUDGET COPILOT
+MVP Specification – STORYBOARD & BUDGET COPILOT
 1. Product overview
-Title: AI STORYBOARD & BUDGET COPILOT
+Title: STORYBOARD & BUDGET COPILOT
 Tagline: An AI assistant that helps small creators turn a rough idea into a structured storyboard, production checklist, and budget estimate.
 
 Goal (MVP):
