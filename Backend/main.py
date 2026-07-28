@@ -94,25 +94,56 @@ async def _call_granite(prompt: str) -> str:
 
 def _parse_json(raw: str, primed: bool = True) -> dict:
     """
-    Extract and parse the first JSON object or array from the model output.
-    - primed=True: prompts end with '{' so the model continues from there;
-      prepend '{' back before parsing.
-    - Also handles prose preambles and markdown code fences defensively.
+    Robustly extract and parse the first complete JSON object or array from
+    the model output, handling:
+    - primed prompts (response continues after the '{' we injected)
+    - prose preambles before the JSON
+    - trailing prose/notes after the closing bracket
+    - markdown code fences
     """
     cleaned = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
-    # If the response doesn't already start with { or [, prepend { (primed mode)
+    # In primed mode the model continues after the '{' we put in the prompt,
+    # so prepend it back unless the model happened to repeat it.
     if primed and cleaned and cleaned[0] not in "{[":
         cleaned = "{" + cleaned
-    elif not primed:
-        # Non-primed: scan forward to find the first JSON structure
+
+    # In non-primed mode scan forward to find the first { or [
+    if not primed or (cleaned and cleaned[0] not in "{["):
         start = next((i for i, c in enumerate(cleaned) if c in "{["), None)
         if start is not None:
             cleaned = cleaned[start:]
 
-    # If primed and response starts mid-object (no leading {), prepend it
-    if primed and cleaned and cleaned[0] not in "{[":
-        cleaned = "{" + cleaned
+    # Walk the string tracking brace/bracket depth to find where the top-level
+    # JSON structure ends, then discard everything after it (e.g. model notes).
+    def _extract_json_boundary(s: str) -> str:
+        depth = 0
+        in_string = False
+        escape = False
+        opener = s[0] if s else "{"
+        closer = "}" if opener == "{" else "]"
+        for i, ch in enumerate(s):
+            if escape:
+                escape = False
+                continue
+            if ch == "\\" and in_string:
+                escape = True
+                continue
+            if ch == '"':
+                in_string = not in_string
+                continue
+            if in_string:
+                continue
+            if ch == opener:
+                depth += 1
+            elif ch == closer:
+                depth -= 1
+                if depth == 0:
+                    return s[: i + 1]
+        return s  # fallback: return as-is
+
+    if cleaned and cleaned[0] in "{[":
+        cleaned = _extract_json_boundary(cleaned)
 
     try:
         return json.loads(cleaned)
