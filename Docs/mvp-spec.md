@@ -88,32 +88,38 @@ User can adjust or regenerate:
 Frontend offers a “Copy to clipboard” or “Download as JSON/text” button for storyboard and budget.
 
 3. Feature list
-3.1 Must‑have features (for MVP)
+3.1 Must‑have features (for MVP) — ALL COMPLETE ✅
 Web UI with:
 
-Idea input form.
+Idea input form (title, description, platform, duration, style, budget parameters). ✅
 
-Display of storyboard, checklist, and budget.
+Display of storyboard, checklist, and budget. ✅
+
+Mobile-responsive layout with accessible tap targets. ✅
 
 Backend endpoints:
 
-POST /api/storyboard – generate storyboard from idea + parameters.
+POST /api/storyboard – generate storyboard from idea + parameters. ✅
 
-POST /api/checklist – generate production checklist from storyboard JSON.
+POST /api/checklist – generate production checklist from storyboard JSON. ✅
 
-POST /api/budget – generate budget estimate from idea + budget parameters.
+POST /api/budget – generate budget estimate from idea + budget parameters. ✅
+
+POST /api/refine – refine any generated output with a follow-up instruction. ✅
 
 AI integration:
 
-Calls to an LLM to produce structured JSON outputs for storyboard, checklist, and budget.
+IBM Granite via watsonx.ai producing structured JSON for storyboard, checklist, and budget. ✅
+
+Robust JSON parsing handling prose preambles, trailing notes, and markdown fences. ✅
 
 Basic refinement:
 
-Ability to send a follow‑up prompt to adjust storyboard or budget and regenerate.
+Refine panel allows follow-up prompts on storyboard, checklist, or budget. ✅
 
 Simple export:
 
-Copy or download results as text/JSON.
+Copy to clipboard and download as JSON for all three outputs. ✅
 
 3.2 Stretch features (future, not required for MVP)
 Project saving (local storage or lightweight database).
@@ -126,63 +132,61 @@ Analytics summary (number of scenes, estimated total cost, distribution of costs
 
 4. Tech stack
 4.1 Frontend
-Framework: React or Next.js.
+Framework: React + Vite (TypeScript).
 
-Key components:
+Key components (all in Frontend/PlanPage.tsx):
 
-IdeaInput – form for idea and parameters.
+StoryboardView – displays generated scenes with numbered badges, visuals, and talking points.
 
-StoryboardView – displays generated scenes.
+ChecklistView – displays tasks in phased tables (Pre-production, Production, Post-production).
 
-ChecklistView – displays tasks, roles, timeline.
+BudgetView – displays cost categories and totals in a responsive table.
 
-BudgetView – displays cost table and totals.
+Refine panel – sends follow-up instructions to adjust any generated output.
 
 4.2 Backend
-Option A (Node.js):
-
-Node.js + Express.
+Python + FastAPI.
 
 REST API endpoints:
 
-POST /api/storyboard
+POST /api/storyboard – generate storyboard from idea + parameters.
 
-POST /api/checklist
+POST /api/checklist – generate production checklist from storyboard JSON.
 
-POST /api/budget
+POST /api/budget – generate budget estimate from idea + budget parameters.
 
-Option B (Python):
-
-FastAPI.
-
-Equivalent endpoints with JSON request/response.
+POST /api/refine – refine any previously generated output with a plain-English instruction.
 
 Backend responsibilities:
 
-Validate user input.
+Validate user input (Pydantic models with field validators).
 
-Build prompts for the AI model.
+Build prompts for the AI model using Granite chat format.
 
-Call the LLM API and parse responses into defined JSON schemas.
+Call the watsonx.ai API and robustly parse JSON responses.
 
 Return structured data to the frontend.
 
 4.3 AI layer
-Integrate with an LLM (e.g., IBM Granite or another compatible hosted model) via HTTP API.
+Model: IBM Granite (ibm/granite-3-8b-instruct) via watsonx.ai HTTP API.
 
-Use prompt templates that:
+Authentication: IBM Cloud IAM token exchange using WATSONX_API_KEY.
 
-Define the assistant role: “You are an AI assistant for solo content creators, outputting JSON only.”
+Prompt strategy:
 
-Specify the JSON schema for storyboard, checklist, and budget.
+Use Granite chat format (<|user|> / <|assistant|>) with a '{' primer to force JSON continuation.
+
+Describe required JSON keys in plain English — no schema examples in prompts (prevents model from describing instead of generating).
+
+JSON parsing is handled by a brace-depth walker that extracts the first complete JSON object and discards any trailing model commentary.
 
 IBM Bob in VS Code is used to:
 
-Design and refine these prompts.
+Design and refine prompt templates.
 
-Generate skeleton code for API handlers and data models.
+Generate and refactor API handlers, data models, and parsing logic.
 
-Refactor and test integration logic.
+Debug integration issues and review code quality.
 
 5. Data structures (JSON)
 5.1 Storyboard JSON (example schema)
